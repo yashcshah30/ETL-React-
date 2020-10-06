@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import emailjs from 'emailjs-com';
 import Modal from "./components/Modal";
 import axios from "axios";
 
@@ -12,7 +13,9 @@ class App extends Component {
         description: "",
         completed: false
       },
-      todoList: []
+      todoList: [],
+      name: "Yash",
+      email: "yashcshah30@gmail.com"
     };
   }
   componentDidMount() {
@@ -88,6 +91,23 @@ class App extends Component {
     this.setState({ modal: !this.state.modal });
   };
   handleSubmit = item => {
+
+    let templateParams = {
+      from_name: this.state.email,
+      to_name: 'yashcshah30@gmail.com',
+      subject: 'To-Do',
+      message: 'hardcoded message',
+     }
+
+
+     emailjs.send(
+      'service_id',
+      'template_id',
+       templateParams,
+      'user_id'
+     );
+
+
     this.toggle();
     if (item.id) {
       axios
@@ -99,6 +119,7 @@ class App extends Component {
       .post("http://localhost:8000/api/todos/", item)
       .then(res => this.refreshList());
   };
+  
   handleDelete = item => {
     axios
       .delete(`http://localhost:8000/api/todos/${item.id}`)
